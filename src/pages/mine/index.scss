@@ -1,0 +1,32 @@
+.mine {
+  .userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5%;
+    .avatar {
+      align-items: center;
+      width: 200px;
+      height: 200px;
+    }
+    .userName {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .btn-login {
+      margin-top: 20px;
+    }
+    .address{
+      margin-top: 10px;
+    }
+  }
+
+  .version {
+    font-size: 30px;
+    position: absolute;
+    bottom: 40px;
+    text-align: center;
+    left: 0;
+    right: 0;
+  }
+}
