@@ -4,6 +4,7 @@ export default {
     'pages/index/index', // 首页
     'pages/infoSetting/index', // 用户信息设置
     'pages/payTypeList/index', // 添加支出类型
+    'pages/incomeTypeList/index', // 添加收入类型
   ],
   // 配置下方导航栏
   tabBar: {

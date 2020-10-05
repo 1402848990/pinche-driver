@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Taro from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
-import { AtButton, AtAvatar } from "taro-ui";
+import { AtButton, AtAvatar,AtToast } from "taro-ui";
 import MySetGrid from '../../components/mySetGrid'
 import "./index.scss";
 
@@ -9,7 +9,8 @@ export default class Index extends Component {
   constructor(props) {
     super(props);[]
     this.state = {
-      userInfo: {}
+      userInfo: {},
+      toast:false
     };
   }
 
@@ -50,9 +51,17 @@ export default class Index extends Component {
   };
 
   jumpInfoSetting = ()=>{
-    Taro.navigateTo({
-      url: '/pages/infoSetting/index'
-    })
+    const {userInfo} = this.state
+    if(userInfo.nickName){
+      Taro.navigateTo({
+        url: '/pages/infoSetting/index'
+      })
+    }else{
+      this.setState({
+        toast:true
+      })
+    }
+   
   }
 
   render() {
@@ -61,11 +70,12 @@ export default class Index extends Component {
     // const { nickName, city, province, country, avatarUrl, gender } = userInfo;
     // console.log("userInfo", Object.keys(userInfo).length);
 
-    const { userInfo } = this.state;
+    const { userInfo,toast } = this.state;
     console.log('render--userInfo', userInfo)
 
     return (
       <View className='mine'>
+        <AtToast isOpened={toast} text='请登录!'></AtToast>
         {/* 用户信息 */}
         <View onClick={this.jumpInfoSetting} className='userInfo'>
         {/* 头像 */}
