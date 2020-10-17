@@ -1,0 +1,21 @@
+.wishList{
+  .btn-addType{
+    background-color: #f4ea2a;
+    position: fixed;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    width: 90%;
+    border: 0;
+  }
+  .list{
+    margin-bottom: 200px;
+  }
+  .modalContent{
+    min-height: 100px;
+  }
+  .wishNum{
+    margin-left: 53px;
+    font-size: 32px;
+  }
+}

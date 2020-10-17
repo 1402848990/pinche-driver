@@ -5,19 +5,20 @@ import "./index.scss";
 
 const columns = [
   {
-    image: "/assets/icon/type/payType.png",
+    image: "/assets/icon/payType.png",
     value: "支出类型",
     path: "payTypeList"
   },
   {
-    image: "/assets/icon/type/incomeType.png",
+    image: "/assets/icon/incomeType.png",
     value: "收入类型",
     path: "incomeTypeList"
   },
   {
     image:
       "https://img10.360buyimg.com/jdphoto/s72x72_jfs/t5872/209/5240187906/2872/8fa98cd/595c3b2aN4155b931.png",
-    value: "心愿清单"
+    value: "心愿清单",
+    path:'wishList'
   },
   {
     image:
@@ -30,7 +31,7 @@ const columns = [
     value: "领京豆"
   },
   {
-    image: "/assets/icon/type/帮助.png",
+    image: "/assets/icon/帮助.png",
     value: "使用帮助"
   }
 ];

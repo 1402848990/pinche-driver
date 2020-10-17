@@ -1,68 +1,124 @@
 import React, { Component } from "react";
 import Taro from "@tarojs/taro";
 import { View, Text, Picker } from "@tarojs/components";
-import { AtButton, AtForm, AtInput, AtList, AtListItem } from "taro-ui";
+import {
+  AtButton,
+  AtForm,
+  AtInput,
+  AtList,
+  AtListItem,
+  AtToast
+} from "taro-ui";
 import "./index.scss";
 
 export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userInfo: {
-        uid:1245
-      },
-      selector: [
-       '男','女'
-      ],
-      selectorChecked: "男"
+      userInfo: {},
+      selector: ["女", "男"],
+      selectorChecked: "男",
+      isOpened: false
     };
   }
-
-  componentWillMount() {}
-
-  async componentDidMount() {}
-
-  componentWillUnmount() {}
-
-  componentDidShow() {}
-
-  componentDidHide() {}
+  async componentDidMount() {
+    const { nickName: userName } = JSON.parse(Taro.getStorageSync("userInfo"));
+    console.log("userName...", userName);
+    // 从数据库获取用户信息
+    const res = await Taro.request({
+      url: "http://localhost:8088/api/User/userInfo",
+      method: "POST",
+      data: {
+        userName
+      }
+    });
+    console.log("res...", res);
+    const { data: { info } = {} } = res;
+    console.log("info", info, this.selector);
+    this.setState({
+      userInfo: info,
+      selectorChecked: this.state.selector[Number(info.sex)]
+    });
+  }
 
   handleChange = (field, value) => {
     console.log(field, value);
-    if(field==='age'){
-      value = Number(value)
+    if (field === "age") {
+      value = Number(value);
     }
-    const {userInfo} = this.state
+    const { userInfo } = this.state;
     this.setState({
-      userInfo:{
+      userInfo: {
         ...userInfo,
         [field]: value
       }
     });
   };
 
-  onSubmit = (a, b) => {
-    console.log("submit", a, b);
+  // 提交
+  onSubmit = async () => {
+    console.log("state.userInfo", this.state.userInfo);
+    const res = await Taro.request({
+      url: "http://localhost:8088/api/User/editUserInfo",
+      method: "POST",
+      data: {
+        changeData: {
+          ...this.state.userInfo,
+          sex: this.state.selectorChecked === "女" ? 0 : 1
+        }
+      }
+    });
+    console.log("res", res.data.success);
+    if (res.data.success) {
+      this.setState({
+        isOpened: true
+      });
+      setTimeout(() => {
+        this.setState({
+          isOpened: false
+        });
+      }, 3000);
+    }
   };
-  onChange = (a, b) => {
-    console.log("change", a, b);
+
+  // 处理性别选择
+  onChange = ({ detail: { value } = {} }) => {
+    console.log("value", value);
+    this.setState({
+      selectorChecked: this.state.selector[Number(value)]
+    });
+  };
+
+  reset = () => {
+    this.setState({
+      userInfo: {
+        ...this.state.userInfo,
+        age:0,
+      },
+      selectorChecked:''
+    });
   };
 
   render() {
-    const { userName,age,uid } = this.state.userInfo;
-    console.log("state", this.state,userName);
+    const { userName, age, id } = this.state.userInfo;
+    console.log("state", this.state, userName);
     return (
       <View className='userSetting'>
+        <AtToast
+          isOpened={this.state.isOpened}
+          text='修改成功'
+          icon='success'
+          status='success'
+        ></AtToast>
         <AtForm>
-        <AtInput
-          className='field'
-          name='uid'
-          title='UID'
-          type='number'
-          value={uid}
-          editable={false}
-        />
+          <AtInput
+            className='field'
+            name='id'
+            title='ID'
+            type='number'
+            value={id}
+            editable={false}
+          />
           <AtInput
             className='field'
             required
@@ -71,6 +127,7 @@ export default class Index extends Component {
             type='text'
             placeholder='用户名'
             value={userName}
+            editable={false}
             onChange={this.handleChange.bind(this, "userName")}
           />
           <AtInput
@@ -97,8 +154,16 @@ export default class Index extends Component {
               </AtList>
             </Picker>
           </View>
-          <AtButton className='btn-submit' type='primary' onClick={this.onSubmit}>提交</AtButton>
-          <AtButton className='btn-reset'  formType='reset'>重置</AtButton>
+          <AtButton
+            className='btn-submit'
+            type='primary'
+            onClick={this.onSubmit}
+          >
+            提交
+          </AtButton>
+          <AtButton className='btn-reset' onClick={this.reset}>
+            重置
+          </AtButton>
         </AtForm>
       </View>
     );

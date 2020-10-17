@@ -19,20 +19,14 @@ class TypeList extends Component {
     super(props);
     this.state = {
       value: "",
-      isOpened: false
+      isOpened: false,
+      allTypeList: []
     };
   }
-  componentWillMount() {}
 
-  componentDidMount() {
-    console.log("分类");
+  async componentDidMount() {
+    await this.getTypeList();
   }
-
-  componentWillUnmount() {}
-
-  componentDidShow() {}
-
-  componentDidHide() {}
 
   handleChange = (field, value) => {
     this.setState({
@@ -40,9 +34,44 @@ class TypeList extends Component {
     });
   };
 
-  onConfirm = () => {
+  // 获取类型
+  getTypeList = async () => {
+    const { type } = this.props;
+    const res = await Taro.request({
+      url: "http://localhost:8088/api/Classification/getAllClassification",
+      method: "POST",
+      data: {
+        userName: JSON.parse(Taro.getStorageSync("userInfo")).nickName,
+        type
+      }
+    });
+    console.log("type---res..", res);
+    // const allTypeList = this.props.defaultColumns.concat(res.data.data || []);
+    await this.setState({
+      allTypeList:res.data.data || []
+    });
+  };
+
+  onConfirm =async () => {
     const { value } = this.state;
-    console.log("ok");
+    const { nickName } = JSON.parse(Taro.getStorageSync("userInfo"));
+    console.log("ok--value", value);
+    const res = await Taro.request({
+      url: "http://localhost:8088/api/Classification/addClassification",
+      method: "POST",
+      data: {
+        title: value,
+        userName: nickName,
+        type: this.props.type
+      }
+    });
+    console.log('res..',res)
+    if(res.data.success){
+      await this.getTypeList()
+      this.setState({
+        isOpened:false
+      })
+    }
   };
 
   addType = () => {
@@ -52,8 +81,9 @@ class TypeList extends Component {
   };
 
   render() {
-    const { value, isOpened } = this.state;
-    console.log('props...', this.props)
+    const { value, isOpened,allTypeList } = this.state;
+    console.log("props...", this.props);
+    console.log('allTypeList',allTypeList)
     return (
       <View className='payTypeList'>
         <AtModal isOpened={isOpened}>
@@ -84,9 +114,9 @@ class TypeList extends Component {
         </AtModal>
 
         <AtList className='list'>
-          {this.props.defaultColumns.map((item, index) => (
-              <AtListItem key='title' title={item.title} thumb={item.icon} />
-            ))}
+          {allTypeList.map((item, index) => (
+            <AtListItem key='title' title={item.title} thumb={item.icon} />
+          ))}
         </AtList>
         <View className='float'>
           <AtButton circle className='btn-addType' onClick={this.addType}>
@@ -98,4 +128,4 @@ class TypeList extends Component {
   }
 }
 
-export default TypeList
+export default TypeList;
