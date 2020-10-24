@@ -87,7 +87,7 @@ class TypeList extends Component {
     return (
       <View className='payTypeList'>
         <AtModal isOpened={isOpened}>
-          <AtModalHeader>添加支出分类</AtModalHeader>
+          <AtModalHeader>添加分类</AtModalHeader>
           <AtModalContent className='modalContent'>
             <AtInput
               className='field'

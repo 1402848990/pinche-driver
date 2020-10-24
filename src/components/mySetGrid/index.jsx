@@ -1,6 +1,16 @@
 import Taro from "@tarojs/taro";
 import React, { Component } from "react";
-import { AtGrid } from "taro-ui";
+import {
+  AtToast,
+  AtGrid,
+  AtInput,
+  AtModalAction,
+  AtModal,
+  AtModalContent,
+  AtModalHeader,
+  AtFloatLayout
+} from "taro-ui";
+import { View, Text, Button } from "@tarojs/components";
 import "./index.scss";
 
 const columns = [
@@ -18,17 +28,15 @@ const columns = [
     image:
       "https://img10.360buyimg.com/jdphoto/s72x72_jfs/t5872/209/5240187906/2872/8fa98cd/595c3b2aN4155b931.png",
     value: "心愿清单",
-    path:'wishList'
+    path: "wishList"
   },
   {
-    image:
-      "https://img12.360buyimg.com/jdphoto/s72x72_jfs/t10660/330/203667368/1672/801735d7/59c85643N31e68303.png",
-    value: "新品首发"
+    image: "/assets/icon/支付-余额.png",
+    value: "本月预算"
   },
   {
-    image:
-      "https://img14.360buyimg.com/jdphoto/s72x72_jfs/t17251/336/1311038817/3177/72595a07/5ac44618Na1db7b09.png",
-    value: "领京豆"
+    image: "",
+    value: ""
   },
   {
     image: "/assets/icon/帮助.png",
@@ -37,13 +45,82 @@ const columns = [
 ];
 
 export default class MySetGrid extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      monthMoney: 0,
+      isOpened: false,
+      helpOpen: false
+    };
+  }
+
   onClick = (item, index) => {
     console.log(item, index);
-    Taro.navigateTo({
-      url: `/pages/${item.path}/index`
+    if (index === 3) {
+      this.setState({ isOpened: true });
+    } else if (index === 5) {
+      this.setState({
+        helpOpen: true
+      });
+    } else {
+      Taro.navigateTo({
+        url: `/pages/${item.path}/index`
+      });
+    }
+  };
+
+  closeHelp = () => {
+    this.setState({
+      helpOpen: false
     });
   };
+
+  onConfirm = (value) => {
+    this.props.monthMoneyChange(value,'confirm');
+    this.setState({
+      isOpened: false
+    });
+  };
+
   render() {
-    return <AtGrid className='atGrid' data={columns} onClick={this.onClick} />;
+    const { isOpened, helpOpen } = this.state;
+    return (
+      <>
+        <AtFloatLayout
+          isOpened={helpOpen}
+          title='使用帮助'
+          onClose={this.closeHelp}
+        >
+          关于本软件的使用帮助、介绍啥的。。。。。。。
+        </AtFloatLayout>
+        <AtModal isOpened={isOpened}>
+          <AtModalHeader>设置本月预算</AtModalHeader>
+          <AtModalContent className='modalContent'>
+            <AtInput
+              className='field'
+              border={false}
+              required
+              name='title'
+              title='本月预算'
+              type='number'
+              placeholder='请输入本月预算'
+              value={this.props.monthMoney}
+              onChange={this.props.monthMoneyChange}
+            />
+          </AtModalContent>
+          <AtModalAction>
+            <Button
+              onClick={() => {
+                this.setState({ isOpened: false });
+              }}
+            >
+              取消
+            </Button>{" "}
+            <Button onClick={this.onConfirm}>确定</Button>
+          </AtModalAction>
+        </AtModal>
+        <AtGrid className='atGrid' data={columns} onClick={this.onClick} />
+      </>
+    );
   }
 }

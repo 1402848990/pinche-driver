@@ -1,8 +1,8 @@
 export default {
   pages: [
     "pages/mine/index", // 我的
-    "pages/addAccount/index", // 记一笔
     "pages/index/index", // 首页
+    "pages/addAccount/index", // 记一笔
     "pages/infoSetting/index", // 用户信息设置
     "pages/payTypeList/index", // 添加支出类型
     "pages/incomeTypeList/index", // 添加收入类型

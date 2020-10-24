@@ -91,6 +91,21 @@ export default class Index extends Component {
     }
   };
 
+  renderLevel = num => {
+    switch (num) {
+      case 1:
+        return "⭐️";
+        case 2:
+        return "⭐️⭐️";
+        case 3:
+          return "⭐️⭐️⭐️";
+          case 4:
+            return "⭐️⭐️⭐️⭐️";
+            case 5:
+            return "⭐️⭐️⭐️⭐️⭐️";
+    }
+  };
+
   render() {
     const { isOpened, title, price, wishList, wishLevel } = this.state;
     console.log("wishList", wishList);
@@ -152,7 +167,7 @@ export default class Index extends Component {
             <AtListItem
               key={item.id}
               title={item.title}
-              note={(item.wishLevel, item.wishPrice)}
+              note={`心愿等级:${this.renderLevel(item.wishLevel)}  物品价格:${item.wishPrice}`}
               onClick={this.handleClick.bind(this, item.id)}
               arrow='right'
               extraText='删除'
@@ -161,7 +176,7 @@ export default class Index extends Component {
         </AtList>
         <View className='float'>
           <AtButton circle className='btn-addType' onClick={this.addType}>
-            添加分类
+            添加心愿
           </AtButton>
         </View>
       </View>

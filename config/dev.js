@@ -4,7 +4,14 @@ module.exports = {
   },
   defineConstants: {
   },
-  mini: {},
+  mini: {
+    usingComponents: {
+      "f2": "@antv/wx-f2"
+    }
+  },
+  compile: {
+    include: ['taro-f2']
+  },
   h5: {
     esnextModules: ['taro-ui']
   }

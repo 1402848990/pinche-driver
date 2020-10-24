@@ -5,7 +5,7 @@
   "description": "面向高校的辅助大学生合理消费系统",
   "templateInfo": {
     "name": "taro-ui",
-    "typescript": false,
+    "typescript": true,
     "css": "sass"
   },
   "scripts": {
@@ -35,17 +35,22 @@
   ],
   "author": "",
   "dependencies": {
+    "@antv/f2": "^3.7.7",
+    "@antv/wx-f2": "^2.1.1",
     "@babel/runtime": "^7.7.7",
     "@tarojs/cli": "3.0.11",
     "@tarojs/components": "3.0.11",
     "@tarojs/react": "3.0.11",
     "@tarojs/runtime": "3.0.11",
     "@tarojs/taro": "3.0.11",
+    "echarts-taro3-react": "^1.0.5",
     "lodash": "4.17.15",
     "moment": "^2.29.0",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",
-    "taro-ui": "^3.0.0-alpha.3"
+    "taro-f2": "^2.2.0",
+    "taro-ui": "^3.0.0-alpha.3",
+    "techarts": "^3.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",

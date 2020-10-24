@@ -3,6 +3,7 @@ import Taro from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
 import { AtButton, AtAvatar, AtToast } from "taro-ui";
 import MySetGrid from "../../components/mySetGrid";
+import utils from "../../utils/index";
 import "./index.scss";
 
 export default class Index extends Component {
@@ -10,7 +11,9 @@ export default class Index extends Component {
     super(props);
     this.state = {
       userInfo: {},
-      toast: false
+      toast: false,
+      monthMoney: 0,
+      monthOpened: false
     };
   }
 
@@ -29,13 +32,12 @@ export default class Index extends Component {
     }
   }
 
-  async componentDidMount() {}
-
-  componentWillUnmount() {}
-
-  componentDidShow() {}
-
-  componentDidHide() {}
+  async componentDidMount() {
+    console.log("this.state.nickName", this.state.nickName);
+    // if (this.state.nickName) {
+    this.getUserInfoFromServer();
+    // }
+  }
 
   // 处理获取用户授权信息 ({ detail: { userInfo } = {} })
   handleGetUserInfo = async ({ detail: { userInfo } = {} }) => {
@@ -60,6 +62,16 @@ export default class Index extends Component {
     console.log("getStorageSync...", Taro.getStorageSync("userInfo"));
   };
 
+  // 获取用户信息
+  getUserInfoFromServer = async () => {
+    const res = await utils.request("User/userInfo");
+    const { info: { monthMoney } = {} } = res.data;
+    await this.setState({
+      monthMoney
+    });
+    console.log("res...", res);
+  };
+
   jumpInfoSetting = () => {
     const { userInfo } = this.state;
     if (userInfo.nickName) {
@@ -73,13 +85,28 @@ export default class Index extends Component {
     }
   };
 
-  render() {
-    // const userInfoStr = Taro.getStorageSync("userInfo");
-    // const userInfo = (userInfoStr && JSON.parse(userInfoStr)) || {};
-    // const { nickName, city, province, country, avatarUrl, gender } = userInfo;
-    // console.log("userInfo", Object.keys(userInfo).length);
+  monthMoneyChange = async (value, confirm) => {
+    console.log(value, confirm);
+    const { nickName } = JSON.parse(Taro.getStorageSync("userInfo"));
+    confirm === "confirm"
+      ? await Taro.request({
+          url: "http://localhost:8088/api/User/editUserInfo",
+          method: "POST",
+          data: {
+            changeData: {
+              userName: nickName,
+              monthMoney: +this.state.monthMoney
+            }
+          }
+        })
+      : await this.setState({
+          monthMoney: +value
+        });
+  };
 
-    const { userInfo, toast } = this.state;
+  render() {
+
+    const { userInfo, toast, monthMoney, monthOpened } = this.state;
     console.log("render--userInfo", userInfo);
 
     return (
@@ -99,10 +126,16 @@ export default class Index extends Component {
           {userInfo.nickName ? (
             <>
               <Text className='userName'>{userInfo.nickName}</Text>
-              <Text className='address'>中国 | 山东 | 济南 男 青铜 > </Text>
+              <Text className='address'>
+                {`${userInfo.country} ${userInfo.province} ${userInfo.city} ${
+                  userInfo.gender === 1 ? "男" : "女"
+                } `}{" "}
+                青铜 >{" "}
+              </Text>
             </>
           ) : (
             <AtButton
+              lang='zh_CN'
               className='btn-login'
               openType='getUserInfo'
               onGetUserInfo={this.handleGetUserInfo}
@@ -115,7 +148,11 @@ export default class Index extends Component {
           )}
         </View>
 
-        <MySetGrid />
+        <MySetGrid
+          monthOpened={monthOpened}
+          monthMoneyChange={this.monthMoneyChange}
+          monthMoney={monthMoney}
+        />
 
         {/* 版本信息 */}
         <Text className='version'> version V1.0</Text>

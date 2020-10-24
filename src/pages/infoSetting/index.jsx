@@ -93,10 +93,15 @@ export default class Index extends Component {
     this.setState({
       userInfo: {
         ...this.state.userInfo,
-        age:0,
+        age: 0
       },
-      selectorChecked:''
+      selectorChecked: ""
     });
+  };
+
+  onGetRegion = region => {
+    // 参数region为选择的省市区
+    console.log(region);
   };
 
   render() {

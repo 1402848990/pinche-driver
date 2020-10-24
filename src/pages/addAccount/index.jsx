@@ -8,12 +8,14 @@ import {
   AtTabsPane,
   AtInput,
   AtDivider,
-  AtIcon
+  AtIcon,
+  AtToast,
 } from "taro-ui";
 import TypeSelectGrid from "../../components/typeSelectGrid";
 
 import "./index.scss";
 import utils from "../../utils";
+import { isNaN } from "lodash";
 
 const tabList = [{ title: "支出" }, { title: "收入" }];
 
@@ -23,7 +25,8 @@ export default class Index extends Component {
     this.typeSelectRef = React.createRef();
     this.state = {
       current: 0,
-      price: 0
+      price: 0,
+      isOpened:false
     };
   }
 
@@ -49,14 +52,26 @@ export default class Index extends Component {
       date,
       selectedType
     } = this.typeSelectRef.current.getValues();
+    console.log("selectedType", selectedType);
     const res = await utils.request("Record/addRecord", {
       type: ["pay", "income"][current],
       remark,
-      date,
+      date: typeof date==='string' ? new Date(date).getTime() : date,
       price: +price,
-      classification: selectedType.id
+      classification: selectedType.id,
+      selectedType: JSON.stringify(selectedType)
     });
     console.log("res", res);
+    if (res.data.success) {
+      this.setState({
+        isOpened: true
+      });
+      setTimeout(() => {
+        this.setState({
+          isOpened: false
+        });
+      }, 3000);
+    }
   };
 
   render() {
@@ -64,6 +79,12 @@ export default class Index extends Component {
     console.log("state", this.state);
     return (
       <View className='addAccount'>
+        <AtToast
+          isOpened={this.state.isOpened}
+          text='保存成功'
+          icon='success'
+          status='success'
+        ></AtToast>
         <AtTabs
           current={this.state.current}
           tabList={tabList}

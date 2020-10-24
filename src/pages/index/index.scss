@@ -1,0 +1,79 @@
+.index {
+  .at-card__header-extra{
+    color: #ff5722 !important;
+    border: 1px solid;
+    font-size: 24px;
+    padding: 6px 12px;
+  }
+  background-color: #e6e6e6;
+  .head {
+    padding: 15px;
+    background-color: #f4ea2a;
+    .payText {
+      font-size: 30px;
+      // color:#d60202
+    }
+    .payNum {
+      font-size: 62px;
+      font-weight: bolder;
+      margin-bottom: 20px;
+      color: #d23d3d;
+    }
+    .incomeNum,
+    .jieyuNum {
+      font-weight: 500;
+
+    }
+    .incomeNum{
+      color: #059205;
+    }
+    .datePicker{
+      display: flex;
+      .at-button{
+        color: #d23d3d;
+        border: 1px solid #d27f19a3;
+      }
+    }
+  }
+  .recordList {
+    .item {
+      display: flex;
+      align-items: center;
+      font-size: 40px;
+      position: relative;
+      .img {
+        width: 60px;
+        height: 60px;
+      }
+      .price {
+        position: absolute;
+        right: 0px;
+        top: 10px;
+        font-size: 48px;
+        // color: #059205;
+        font-weight: 700;
+      }
+      .payColor {
+        color: #d60202;
+      }
+      .incomeColor {
+        color: #059205;
+      }
+    }
+  }
+  .at-card__header-title,
+  .at-card__header-extra {
+    color: #bfbfbf;
+  }
+  .at-card {
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    margin: 0;
+    margin-bottom: 6px;
+  }
+  .at-card__header {
+    border-bottom: 1PX #ff980085 dashed;
+  }
+}
