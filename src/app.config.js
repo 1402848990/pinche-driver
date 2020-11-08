@@ -1,12 +1,14 @@
 export default {
   pages: [
+    "pages/info/add", // 发布行程
     "pages/mine/index", // 我的
     "pages/index/index", // 首页
     "pages/addAccount/index", // 记一笔
-    "pages/infoSetting/index", // 用户信息设置
+    "pages/myInfoSet/index", // 用户信息设置
     "pages/payTypeList/index", // 添加支出类型
     "pages/incomeTypeList/index", // 添加收入类型
-    "pages/wishList/index" // 心愿清单
+    "pages/pushRecord/index", // 发布记录
+    "pages/wallet/index", // 钱包
 
   ],
   // 配置下方导航栏
@@ -37,7 +39,7 @@ export default {
   // 配置小程序窗口
   window: {
     backgroundTextStyle: "light",
-    navigationBarBackgroundColor: "#f4ea2a",
+    navigationBarBackgroundColor: "#f96d40",
     navigationBarTitleText: "辅助大学生合理消费系统",
     navigationBarTextStyle: "black"
   }

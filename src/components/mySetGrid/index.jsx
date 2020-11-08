@@ -15,28 +15,28 @@ import "./index.scss";
 
 const columns = [
   {
-    image: "/assets/icon/payType.png",
-    value: "支出类型",
-    path: "payTypeList"
+    image: "/assets/发布记录.png",
+    value: "发布记录",
+    path: "pushRecord"
   },
   {
-    image: "/assets/icon/incomeType.png",
-    value: "收入类型",
-    path: "incomeTypeList"
+    image: "/assets/个人信息.png",
+    value: "个人信息",
+    path: "myInfoSet"
   },
   {
     image:
-      "https://img10.360buyimg.com/jdphoto/s72x72_jfs/t5872/209/5240187906/2872/8fa98cd/595c3b2aN4155b931.png",
-    value: "心愿清单",
-    path: "wishList"
+      "/assets/我的钱包.png",
+    value: "我的钱包",
+    path: "wallet"
   },
   {
-    image: "/assets/icon/支付-余额.png",
-    value: "本月预算"
+    image: "/assets/紧急联系人.png",
+    value: "紧急联系人"
   },
   {
-    image: "",
-    value: ""
+    image: "/assets/紧急告警.png",
+    value: "一键报警"
   },
   {
     image: "/assets/icon/帮助.png",
@@ -94,16 +94,27 @@ export default class MySetGrid extends Component {
           关于本软件的使用帮助、介绍啥的。。。。。。。
         </AtFloatLayout>
         <AtModal isOpened={isOpened}>
-          <AtModalHeader>设置本月预算</AtModalHeader>
+          <AtModalHeader>设置紧急联系人</AtModalHeader>
           <AtModalContent className='modalContent'>
             <AtInput
               className='field'
               border={false}
               required
-              name='title'
-              title='本月预算'
+              name='urgentName'
+              title='紧急联系人姓名'
+              type='text'
+              placeholder='请输入紧急联系人姓名'
+              value={this.props.monthMoney}
+              onChange={this.props.monthMoneyChange}
+            />
+            <AtInput
+              className='field'
+              border={false}
+              required
+              name='urgentName'
+              title='紧急联系人电话'
               type='number'
-              placeholder='请输入本月预算'
+              placeholder='请输入紧急联系人电话'
               value={this.props.monthMoney}
               onChange={this.props.monthMoneyChange}
             />

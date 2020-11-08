@@ -105,7 +105,7 @@ export default class Index extends Component {
   };
 
   render() {
-    const { userName, age, id } = this.state.userInfo;
+    const { userName, age, id,phone,createdAt } = this.state.userInfo;
     console.log("state", this.state, userName);
     return (
       <View className='userSetting'>
@@ -126,6 +126,14 @@ export default class Index extends Component {
           />
           <AtInput
             className='field'
+            name='createdAt'
+            title='注册时间'
+            type='text'
+            value={createdAt}
+            editable={false}
+          />
+          <AtInput
+            className='field'
             required
             name='userName'
             title='昵称'
@@ -134,6 +142,16 @@ export default class Index extends Component {
             value={userName}
             editable={false}
             onChange={this.handleChange.bind(this, "userName")}
+          />
+          <AtInput
+            className='field'
+            required
+            name='phone'
+            title='手机号'
+            type='phone'
+            placeholder='手机号'
+            value={phone}
+            onChange={this.handleChange.bind(this, "phone")}
           />
           <AtInput
             className='field'

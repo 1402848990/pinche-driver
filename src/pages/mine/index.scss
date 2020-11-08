@@ -1,9 +1,18 @@
 .mine {
+  .at-input__title{
+    width: 290px;
+  }
+  .at-modal__container {
+    width: 640px;
+  }
   .userInfo {
+    background-color: #a70404;
+    color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 5%;
+    padding-bottom: 20px;
     .avatar {
       align-items: center;
       width: 200px;

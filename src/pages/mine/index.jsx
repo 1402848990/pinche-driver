@@ -17,6 +17,7 @@ export default class Index extends Component {
     };
   }
 
+
   async componentWillMount() {
     const res = await Taro.getSetting({});
     console.log("setting...", res);
@@ -76,7 +77,7 @@ export default class Index extends Component {
     const { userInfo } = this.state;
     if (userInfo.nickName) {
       Taro.navigateTo({
-        url: "/pages/infoSetting/index"
+        url: "/pages/myInfoSet/index"
       });
     } else {
       this.setState({
@@ -103,6 +104,10 @@ export default class Index extends Component {
           monthMoney: +value
         });
   };
+  
+  getPhoneNumber =  (e)=> {
+  console.log(e)
+  }
 
   render() {
 

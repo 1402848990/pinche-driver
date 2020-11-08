@@ -27,8 +27,8 @@
     "dev:qq": "npm run build:qq -- --watch",
     "dev:jd": "npm run build:jd -- --watch",
     "dev:quickapp": "npm run build:quickapp -- --watch",
-    "start":"npm run dev:weapp",
-    "build":"npm run build:weapp"
+    "start": "npm run dev:weapp",
+    "build": "npm run build:weapp"
   },
   "browserslist": [
     "last 3 versions",

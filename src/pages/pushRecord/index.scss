@@ -1,0 +1,68 @@
+.pushRecord{
+  .at-card{
+    margin: 0;
+    margin-bottom: 20px;
+    border-radius: 0;
+    border-bottom: 1px solid rgb(160, 157, 157);
+    border-top: 1px solid rgb(160, 157, 157);
+  }
+  .startLocal:before{
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #5f3290;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  .local{
+    margin-bottom: 10px;
+  }
+  .endLocal:before{
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #e60b0b;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  .at-card__header{
+    border-bottom: 1PX #707273 dashed;
+  }
+  .status{
+    float: right;
+    margin-bottom: 30px;
+    margin-top: -45px;
+    font-size: 32px;
+  }
+  .btn-addType{
+    background-color: #cc1e12 !important;
+    color: white;
+    position: fixed;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    width: 90%;
+    border: 0;
+  }
+  .list{
+    margin-bottom: 200px;
+  }
+  .modalContent{
+    min-height: 100px;
+  }
+  .wishNum{
+    margin-left: 53px;
+    font-size: 32px;
+  }
+  .at-list__item .item-content__info-title {
+    color: #5f3290;
+    font-weight: 400;
+    font-size: 40px;
+  }
+  .at-list__item .item-content__info-note {
+    color: #e86212;
+  }
+
+}
