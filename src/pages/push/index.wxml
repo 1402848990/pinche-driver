@@ -15,10 +15,10 @@
 
     <view class="page__bd content">
         <view class="p">
-            <image src="/img/cle1.png" class="icon icon-departure"></image><text>{{data.departure}}</text>
+            <image src="/img/cle1.png" class="icon icon-startLocal"></image><text>{{data.startLocal}}</text>
         </view>
         <view class="p">
-            <image src="/img/cle.png" class="icon icon-departure"></image><text>{{data.destination}}</text>
+            <image src="/img/cle.png" class="icon icon-startLocal"></image><text>{{data.endLocal}}</text>
         </view>
         <view class="p contact">
             <text class="tit">联系人:</text><text>{{data.name}}</text>
@@ -32,7 +32,7 @@
             <text class="tit">拼车价格:</text><text>{{data.price}}</text>
         </view>
         <view class="p contact">
-            <text wx:if="{{data.type == 1}}" class="tit">剩余空位:</text><text wx:elif="{{data.type == 2}}" class="tit">人数:</text><text>{{data.surplus}}</text>
+            <text wx:if="{{data.type == 1}}" class="tit">剩余空位:</text><text wx:elif="{{data.type == 2}}" class="tit">人数:</text><text>{{data.cusNum}}</text>
         </view>
         <view class="p contact" wx:if="{{data.type == 1}}">
             <text class="tit">车型:</text><text>{{data.vehicle}}</text>
@@ -124,8 +124,8 @@
                     <view class="weui-label">乘车人数</view>
                 </view>
                 <view class="weui-cell__bd">
-                    <picker mode="selector"  name="surplus" value="{{surplus}}" range="{{Surpluss}}" bindchange="setsurplus">
-                        <view class="weui-input">{{Surpluss[surplus]}}</view>
+                    <picker mode="selector"  name="cusNum" value="{{cusNum}}" range="{{Surpluss}}" bindchange="setsurplus">
+                        <view class="weui-input">{{Surpluss[cusNum]}}</view>
                     </picker>
                 </view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>

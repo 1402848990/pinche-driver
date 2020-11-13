@@ -12,70 +12,104 @@ export default class Index extends Component {
     this.state = {
       userInfo: {},
       toast: false,
-      monthMoney: 0,
-      monthOpened: false
+      urgentName: null,
+      urgentPhone: null
     };
   }
-
 
   async componentWillMount() {
     const res = await Taro.getSetting({});
     console.log("setting...", res);
     if (res.authSetting["scope.userInfo"]) {
       const { userInfo } = await Taro.getUserInfo({});
+      const oldUserInfo = this.state.userInfo;
       await this.setState({
-        userInfo
+        isLogin: true,
+        userInfo: {
+          ...oldUserInfo,
+          ...userInfo
+        }
       });
       Taro.setStorageSync("userInfo", JSON.stringify(userInfo));
-      console.log("------userInfo...", userInfo);
     } else {
-      console.log("请登录");
+      this.setState({
+        isLogin: false
+      });
     }
   }
 
   async componentDidMount() {
-    console.log("this.state.nickName", this.state.nickName);
-    // if (this.state.nickName) {
     this.getUserInfoFromServer();
-    // }
+    this.getCusRecordData();
+    this.getUrgentInfo();
   }
 
-  // 处理获取用户授权信息 ({ detail: { userInfo } = {} })
+  componentDidShow() {
+    this.getUserInfoFromServer();
+    this.getCusRecordData();
+    this.getUrgentInfo();
+  }
+
+  // 处理获取用户授权信息
   handleGetUserInfo = async ({ detail: { userInfo } = {} }) => {
     console.log("userInfo..", userInfo);
     if (userInfo) {
       this.setState({
+        isLogin: true,
         userInfo
       });
       const { nickName, gender } = userInfo;
       // 创建账户
       const res = await Taro.request({
-        url: "http://localhost:8088/api/User/register",
+        url: "http://localhost:8088/interface/User/register",
         method: "POST",
         data: {
-          userName: nickName,
+          nickName,
           sex: gender
         }
       });
       console.log("res...", res);
       Taro.setStorageSync("userInfo", JSON.stringify(userInfo));
+      this.getUserInfoFromServer();
+      this.getCusRecordData();
+      this.getUrgentInfo();
     }
-    console.log("getStorageSync...", Taro.getStorageSync("userInfo"));
   };
 
   // 获取用户信息
   getUserInfoFromServer = async () => {
     const res = await utils.request("User/userInfo");
-    const { info: { monthMoney } = {} } = res.data;
+    const { info } = res.data;
     await this.setState({
-      monthMoney
+      userInfo: info
     });
-    console.log("res...", res);
+  };
+
+  // 获取行程记录
+  getCusRecordData = async () => {
+    const res = utils.request("CusRecord/getRecordData");
+    const { waitOrderCount, allCount } = (await res).data.data;
+    this.setState({
+      waitOrderCount,
+      allCount
+    });
+  };
+
+  // 获取紧急联系人信息
+  getUrgentInfo = async () => {
+    const res = await utils.request("Urgent/get");
+    console.log("res", res);
+    const {  urgentName, urgentPhone } = res.data.info||{};
+    this.setState({
+      urgentName,
+      urgentPhone,
+      isUrgent: urgentName
+    });
   };
 
   jumpInfoSetting = () => {
-    const { userInfo } = this.state;
-    if (userInfo.nickName) {
+    const { isLogin } = this.state;
+    if (isLogin) {
       Taro.navigateTo({
         url: "/pages/myInfoSet/index"
       });
@@ -86,33 +120,47 @@ export default class Index extends Component {
     }
   };
 
-  monthMoneyChange = async (value, confirm) => {
-    console.log(value, confirm);
-    const { nickName } = JSON.parse(Taro.getStorageSync("userInfo"));
-    confirm === "confirm"
-      ? await Taro.request({
-          url: "http://localhost:8088/api/User/editUserInfo",
-          method: "POST",
-          data: {
-            changeData: {
-              userName: nickName,
-              monthMoney: +this.state.monthMoney
-            }
-          }
-        })
-      : await this.setState({
-          monthMoney: +value
-        });
+  // 紧急联系人设置提交
+  urgentSubmit = async () => {
+    const { urgentName, urgentPhone, isUrgent } = this.state;
+    await utils.request(isUrgent ? "Urgent/edit" : "Urgent/add", {
+      urgentName,
+      urgentPhone
+    });
+    this.getUrgentInfo();
   };
-  
-  getPhoneNumber =  (e)=> {
-  console.log(e)
-  }
+
+  getPhoneNumber = e => {
+    console.log(e);
+  };
+
+  fieldChange = (field, value) => {
+    console.log(field, value);
+    this.setState({
+      [field]: value
+    });
+  };
+
+  chose = () => {
+    Taro.chooseLocation({
+      success: function(res) {
+        console.log("res", res);
+      },
+      isHighAccuracy: true
+    });
+  };
 
   render() {
-
-    const { userInfo, toast, monthMoney, monthOpened } = this.state;
-    console.log("render--userInfo", userInfo);
+    const {
+      userInfo,
+      toast,
+      isLogin,
+      waitOrderCount,
+      allCount,
+      urgentName,
+      urgentPhone
+    } = this.state;
+    console.log("state....", this.state);
 
     return (
       <View className='mine'>
@@ -128,15 +176,12 @@ export default class Index extends Component {
             default-avatar='https://jdc.jd.com/img/200'
           ></AtAvatar>
           {/* 登录按钮 */}
-          {userInfo.nickName ? (
+          {isLogin ? (
             <>
-              <Text className='userName'>{userInfo.nickName}</Text>
-              <Text className='address'>
-                {`${userInfo.country} ${userInfo.province} ${userInfo.city} ${
-                  userInfo.gender === 1 ? "男" : "女"
-                } `}{" "}
-                青铜 >{" "}
+              <Text className='userName'>
+                {userInfo.userName || userInfo.nickName}
               </Text>
+              <Text className='address'>{`共拼车:${allCount}次 | 余额:${userInfo.amount}元 | 待出行:${waitOrderCount}`}</Text>
             </>
           ) : (
             <AtButton
@@ -145,7 +190,7 @@ export default class Index extends Component {
               openType='getUserInfo'
               onGetUserInfo={this.handleGetUserInfo}
               type='primary'
-              size='small'
+              size='large'
               circle
             >
               立即登录
@@ -154,13 +199,15 @@ export default class Index extends Component {
         </View>
 
         <MySetGrid
-          monthOpened={monthOpened}
-          monthMoneyChange={this.monthMoneyChange}
-          monthMoney={monthMoney}
+          urgentSubmit={this.urgentSubmit}
+          fieldChange={this.fieldChange}
+          urgentName={urgentName}
+          urgentPhone={urgentPhone}
         />
 
         {/* 版本信息 */}
         <Text className='version'> version V1.0</Text>
+        <AtButton onClick={()=>{Taro.navigateTo({url:'/pages/push/add'})}}>发布行程</AtButton>
       </View>
     );
   }

@@ -30,7 +30,7 @@ export default class Index extends Component {
       startDate: Date.now(), // 筛选开始时间
       endDate: Date.now(), // 筛选结束时间
       monthMoney: 0, // 本月结余
-      message:''
+      message: ""
     };
   }
 
@@ -90,18 +90,18 @@ export default class Index extends Component {
     // 过度消费  如果本月预算>100 && 结余<预算的10%
     if (money < monthMoney * 0.1 && monthMoney > 100) {
       this.setState({
-        message:'您已过度消费！请节制！'
-      })
+        message: "您已过度消费！请节制！"
+      });
     }
     if (money < monthMoney * 0.5 && monthMoney > 100) {
       this.setState({
-        message:'请根据实际需要消费~'
-      })
+        message: "请根据实际需要消费~"
+      });
     }
     if (money > monthMoney * 0.8 && monthMoney > 100) {
       this.setState({
-        message:'请在未来适度消费~不要难为自己喔~😯'
-      })
+        message: "请在未来适度消费~不要难为自己喔~😯"
+      });
     }
     this.setState({
       monthMoney: money
@@ -170,17 +170,17 @@ export default class Index extends Component {
       payTotal,
       incomeTotal,
       monthMoney,
-      message=''
+      message = ""
     } = this.state;
-    console.log('message', message)
+    console.log("message", message);
     console.log("recordList", recordList);
     return (
       <View className='index'>
-        {
-          message &&  <AtNoticebar marquee icon='volume-plus'>
-          {`${message}`}
-        </AtNoticebar>
-        }
+        {message && (
+          <AtNoticebar marquee icon='volume-plus'>
+            {`${message}`}
+          </AtNoticebar>
+        )}
         {/* <AtMessage /> */}
         {/* 头部 */}
         <View className='head'>
@@ -229,49 +229,32 @@ export default class Index extends Component {
           onActionClick={this.onSearch}
           placeholder='根据备注搜索'
         />
-        <AtTabs
-          current={this.state.current}
-          tabList={tabList}
-          onClick={this.changeTab}
-        >
-          <AtTabsPane current={this.state.current} index={0}>
-            {current === 0 && (
-              <View className='recordList'>
-                {recordList.map((item, index) => {
-                  const type = JSON.parse(item.selectedType);
-                  return (
-                    <AtCard
-                      key={item.id}
-                      note={`备注：${item.remark}`}
-                      extra={`${item.price > 99 ? "大额" : ""}`}
-                      title={moment(item.date).format("YYYY-MM-DD")}
-                      thumb='/assets/icon/日历.png'
-                    >
-                      <View className='item'>
-                        <Image className='img' src={type.icon} />
-                        <Text className='title'>{type.title}</Text>
-                        <Text
-                          className={`price ${
-                            item.type === "pay" ? "payColor" : "incomeColor"
-                          }`}
-                        >
-                          {item.price}
-                        </Text>
-                      </View>
-                    </AtCard>
-                  );
-                })}
-              </View>
-            )}
-          </AtTabsPane>
-          <AtTabsPane current={this.state.current} index={1}>
-            {current === 1 && (
-              <View style='padding: 20px 10px;background-color: #FAFBFC;text-align: center;'>
-                {/* <EcharsView /> */}
-              </View>
-            )}
-          </AtTabsPane>
-        </AtTabs>
+        <View className='recordList'>
+          {recordList.map((item, index) => {
+            const type = JSON.parse(item.selectedType);
+            return (
+              <AtCard
+                key={item.id}
+                note={`备注：${item.remark}`}
+                extra={`${item.price > 99 ? "大额" : ""}`}
+                title={moment(item.date).format("YYYY-MM-DD")}
+                thumb='/assets/icon/日历.png'
+              >
+                <View className='item'>
+                  <Image className='img' src={type.icon} />
+                  <Text className='title'>{type.title}</Text>
+                  <Text
+                    className={`price ${
+                      item.type === "pay" ? "payColor" : "incomeColor"
+                    }`}
+                  >
+                    {item.price}
+                  </Text>
+                </View>
+              </AtCard>
+            );
+          })}
+        </View>
       </View>
     );
   }

@@ -1,5 +1,6 @@
-// pages/info/index.js
+// pages/push/index.js
 var util = require('../../utils/util.js');
+
 var app = getApp();
 var page = 1;
 var comment = new Array();
@@ -79,7 +80,7 @@ Page({
   appointment:function(e){
     var fId = e.detail.formId;
     var that = this;
-    console.log(e.detail.value.surplus);
+    console.log(e.detail.value.cusNum);
     if(e.detail.value.name == ''){
         util.isError('请输入姓名',that);
         return false;
@@ -92,12 +93,12 @@ Page({
       util.isError('手机号码错误', that);
       return false;
     }
-    if(e.detail.value.surplus == 0){
+    if(e.detail.value.cusNum == 0){
         util.isError('请选择人数',that);
         return false;
     }
     util.clearError(that);
-    util.req('appointment/add',{form_id:fId,iid:this.data.data.id,name:e.detail.value.name,phone:e.detail.value.phone,surplus:e.detail.value.surplus,sk:app.globalData.sk},function(data){
+    util.req('appointment/add',{form_id:fId,iid:this.data.data.id,name:e.detail.value.name,phone:e.detail.value.phone,cusNum:e.detail.value.cusNum,sk:app.globalData.sk},function(data){
       if(data.status == 1){
         that.setData({modalFlag:false});
         wx.showToast({
@@ -112,7 +113,7 @@ Page({
     })
   },
   setsurplus:function(e){
-    this.setData({surplus:e.detail.value})
+    this.setData({cusNum:e.detail.value})
   },
   onLoad:function(options){
     var that = this;
@@ -142,7 +143,7 @@ Page({
         var notme = true;
       }
       var Surpluss = new Array('请选择人数');
-      for(var i = 1; i <= data.data.surplus; i++){
+      for(var i = 1; i <= data.data.cusNum; i++){
         Surpluss.push(i);
       }
       that.setData({
@@ -151,7 +152,7 @@ Page({
         'data.gender':data.data.gender,
         'notme':notme,
         'Surpluss':Surpluss,
-        'surplus':0
+        'cusNum':0
         });
     })   
     page = 1; 
@@ -205,7 +206,7 @@ Page({
   onShareAppMessage: function () { 
     return {
       title: '拼车详情',
-      path: 'pages/info/index?id='+this.data.data.id
+      path: 'pages/push/index?id='+this.data.data.id
     }
   },
   getCount:function(id){  

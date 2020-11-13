@@ -1,4 +1,4 @@
-/* pages/info/add.wxss */
+/* pages/push/add.wxss */
 .page__bd{background: #efefef;}
 .weui-cells__title{padding-top:.3rem;margin-top:0;}
 .radio-group{padding: 10px 0px !important;}

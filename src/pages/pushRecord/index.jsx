@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Taro from "@tarojs/taro";
+import moment from 'moment'
 import {
   AtButton,
   AtList,
@@ -18,9 +19,10 @@ import util from "../../utils/index";
 import "./index.scss";
 
 const OrderStatusMap = {
-  1: "已完成",
-  2: "已关闭",
-  3: "进行中"
+  0: "未出行",
+  1: "进行中",
+  2: "已完成",
+  3: '已关闭'
 };
 
 export default class Index extends Component {
@@ -29,7 +31,7 @@ export default class Index extends Component {
     this.state = {
       title: "",
       isOpened: false,
-      pushRecord: [],
+      recordList: [],
       price: 0.0,
       wishLevel: 1,
       delSucc: false
@@ -39,23 +41,23 @@ export default class Index extends Component {
   componentWillMount() {}
 
   async componentDidMount() {
-    await this.getWishList();
+    await this.getCusRecordList();
   }
 
-  // 获取心愿列表
-  getWishList = async () => {
-    const res = await util.request("Wish/getWishList");
+  // 获取乘客订单记录
+  getCusRecordList = async () => {
+    const res = await util.request("CusRecord/getRecordList");
     console.log("res...", res);
     if (res.data.success) {
       await this.setState({
-        pushRecord: res.data.data
+        recordList: res.data.data
       });
     }
   };
 
   addTrip = () => {
     Taro.navigateTo({
-      url: "/pages/info/add"
+      url: "/pages/push/add"
     });
   };
 
@@ -100,38 +102,8 @@ export default class Index extends Component {
   };
 
   render() {
-    let { isOpened, title, price, pushRecord, wishLevel } = this.state;
-    pushRecord = [
-      {
-        id: 1,
-        date: "2020-10-11 22:22:22",
-        startLocal: "钱江block",
-        endLocal: "杭州市民中心",
-        price: 20,
-        remark: "备注",
-        status: 1
-      },
-      {
-        id: 2,
-        date: "2020-10-11 22:22:22",
-        startLocal: "钱江block",
-        endLocal: "杭州市民中心",
-        price: 20,
-        remark: "备注",
-        status: 1
-      },
-      {
-        id: 2,
-        date: "2020-10-11 22:22:22",
-        startLocal: "钱江block",
-        endLocal: "杭州市民中心",
-        price: 20,
-        remark: "备注",
-        status: 1
-      }
+    let { isOpened, title, price, recordList, wishLevel } = this.state;
 
-    ];
-    console.log("pushRecord", pushRecord);
     return (
       <View className='pushRecord'>
         <AtToast
@@ -141,13 +113,13 @@ export default class Index extends Component {
           status='success'
         ></AtToast>
         <View className='recordList'>
-          {pushRecord.map((item, index) => {
+          {recordList.map((item, index) => {
             return (
               <AtCard
                 key={item.id}
                 note={`备注：${item.remark}`}
-                extra={`￥${item.price}`}
-                title={item.date}
+                extra={`￥${item.price||'-'}`}
+                title={moment(item.date).format('YYYY-MM-DD HH:MM')}
                 thumb='/assets/time_4px.png'
               >
                 <View className='item'>
@@ -156,6 +128,9 @@ export default class Index extends Component {
                   </View>
                   <View className='local'>
                     <Text className='endLocal'>{item.endLocal}</Text>
+                  </View>
+                  <View className='local'>
+                    <Text className='createdAt'>发布时间：{moment(+item.createdAt).format('YYYY-MM-DD HH:MM:ss')}</Text>
                   </View>
                   <View className='status'>{OrderStatusMap[item.status]}</View>
                 </View>

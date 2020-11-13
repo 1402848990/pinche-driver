@@ -1,4 +1,4 @@
-/* pages/info/add.wxss */
+/* pages/push/add.wxss */
 @import "../../../app.wxss";
 .page__bd {
   background: #efefef;

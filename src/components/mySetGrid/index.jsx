@@ -16,7 +16,7 @@ import "./index.scss";
 const columns = [
   {
     image: "/assets/发布记录.png",
-    value: "发布记录",
+    value: "行程记录",
     path: "pushRecord"
   },
   {
@@ -48,7 +48,6 @@ export default class MySetGrid extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      monthMoney: 0,
       isOpened: false,
       helpOpen: false
     };
@@ -76,7 +75,7 @@ export default class MySetGrid extends Component {
   };
 
   onConfirm = (value) => {
-    this.props.monthMoneyChange(value,'confirm');
+    this.props.urgentSubmit(value,'confirm');
     this.setState({
       isOpened: false
     });
@@ -103,20 +102,20 @@ export default class MySetGrid extends Component {
               name='urgentName'
               title='紧急联系人姓名'
               type='text'
-              placeholder='请输入紧急联系人姓名'
-              value={this.props.monthMoney}
-              onChange={this.props.monthMoneyChange}
+              placeholder='紧急联系人姓名'
+              value={this.props.urgentName}
+              onChange={this.props.fieldChange.bind(this,'urgentName')}
             />
             <AtInput
               className='field'
               border={false}
               required
-              name='urgentName'
+              name='urgentPhone'
               title='紧急联系人电话'
               type='number'
-              placeholder='请输入紧急联系人电话'
-              value={this.props.monthMoney}
-              onChange={this.props.monthMoneyChange}
+              placeholder='紧急联系人电话'
+              value={this.props.urgentPhone}
+              onChange={this.props.fieldChange.bind(this,'urgentPhone')}
             />
           </AtModalContent>
           <AtModalAction>

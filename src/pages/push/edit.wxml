@@ -43,7 +43,7 @@
                         <view class="weui-label">出发地</view>
                     </view>
                     <view class="weui-cell__bd">
-                        <view class="weui-input" bindtap="sexDeparture">{{data.departure}}</view>                 
+                        <view class="weui-input" bindtap="sexDeparture">{{data.startLocal}}</view>                 
                     </view>
                 </view>
                 <view class="weui-cell weui-cell_input StartAndStop">
@@ -51,7 +51,7 @@
                         <view class="weui-label">目的地</view>
                     </view>
                     <view class="weui-cell__bd">
-                        <view class="weui-input stop" bindtap="sexDestination">{{data.destination}}</view>
+                        <view class="weui-input stop" bindtap="sexDestination">{{data.endLocal}}</view>
                     </view>
                 </view>
                 <!-- <image src="/img/to.png" class="to1"></image> -->
@@ -99,8 +99,8 @@
                         <view class="weui-label">剩余空位</view>
                     </view>
                     <view class="weui-cell__bd">
-                        <picker mode="selector" name="surplus" value="{{data.surplus}}" range="{{Surpluss}}" bindchange="setsurplus">
-                            <view class="weui-input">{{Surpluss[data.surplus]}}</view>
+                        <picker mode="selector" name="cusNum" value="{{data.cusNum}}" range="{{Surpluss}}" bindchange="setsurplus">
+                            <view class="weui-input">{{Surpluss[data.cusNum]}}</view>
                         </picker>
                     </view>
                     <view class="weui-cell__ft weui-cell__ft_in-access"></view>
@@ -110,8 +110,8 @@
                         <view class="weui-label">乘车人数</view>
                     </view>
                     <view class="weui-cell__bd">
-                        <picker mode="selector"  name="surplus" value="{{data.surplus}}" range="{{Surpluss}}" bindchange="setsurplus">
-                            <view class="weui-input">{{Surpluss[data.surplus]}}</view>
+                        <picker mode="selector"  name="cusNum" value="{{data.cusNum}}" range="{{Surpluss}}" bindchange="setsurplus">
+                            <view class="weui-input">{{Surpluss[data.cusNum]}}</view>
                         </picker>
                     </view>
                     <view class="weui-cell__ft weui-cell__ft_in-access"></view>

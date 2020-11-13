@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Taro from "@tarojs/taro";
 import { View, Text, Picker } from "@tarojs/components";
+import moment from 'moment'
 import {
   AtButton,
   AtForm,
@@ -9,6 +10,7 @@ import {
   AtListItem,
   AtToast
 } from "taro-ui";
+import utils from '../../utils/index'
 import "./index.scss";
 
 export default class Index extends Component {
@@ -22,14 +24,13 @@ export default class Index extends Component {
     };
   }
   async componentDidMount() {
-    const { nickName: userName } = JSON.parse(Taro.getStorageSync("userInfo"));
-    console.log("userName...", userName);
+    const { nickName } = JSON.parse(Taro.getStorageSync("userInfo"));
     // 从数据库获取用户信息
     const res = await Taro.request({
-      url: "http://localhost:8088/api/User/userInfo",
+      url: "http://localhost:8088/interface/User/userInfo",
       method: "POST",
       data: {
-        userName
+        nickName
       }
     });
     console.log("res...", res);
@@ -58,16 +59,20 @@ export default class Index extends Component {
   // 提交
   onSubmit = async () => {
     console.log("state.userInfo", this.state.userInfo);
-    const res = await Taro.request({
-      url: "http://localhost:8088/api/User/editUserInfo",
-      method: "POST",
-      data: {
-        changeData: {
-          ...this.state.userInfo,
-          sex: this.state.selectorChecked === "女" ? 0 : 1
-        }
-      }
-    });
+    const res = await utils.request('User/editUserInfo',{changeData: {
+      ...this.state.userInfo,
+      sex: this.state.selectorChecked === "女" ? 0 : 1
+    }})
+    // const res = await Taro.request({
+    //   url: "http://localhost:8088/interface/User/editUserInfo",
+    //   method: "POST",
+    //   data: {
+    //     changeData: {
+    //       ...this.state.userInfo,
+    //       sex: this.state.selectorChecked === "女" ? 0 : 1
+    //     }
+    //   }
+    // });
     console.log("res", res.data.success);
     if (res.data.success) {
       this.setState({
@@ -129,18 +134,17 @@ export default class Index extends Component {
             name='createdAt'
             title='注册时间'
             type='text'
-            value={createdAt}
+            value={moment(+createdAt).format('YYYY-MM-DD HH:MM:ss')}
             editable={false}
           />
           <AtInput
             className='field'
             required
             name='userName'
-            title='昵称'
+            title='姓名'
             type='text'
-            placeholder='用户名'
+            placeholder='姓名'
             value={userName}
-            editable={false}
             onChange={this.handleChange.bind(this, "userName")}
           />
           <AtInput

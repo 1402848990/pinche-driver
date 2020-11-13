@@ -16,7 +16,7 @@ function formatNumber(n) {
 }  
 
   
-var rootDocment = 'https://xcx.codems.cn/api/';
+var rootDocment = 'https://xcx.codems.cn/interface/';
 
 var wxAppinfo = {
   'name': '同城拼车',
