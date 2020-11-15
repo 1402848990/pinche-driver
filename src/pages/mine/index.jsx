@@ -207,7 +207,7 @@ export default class Index extends Component {
 
         {/* 版本信息 */}
         <Text className='version'> version V1.0</Text>
-        <AtButton onClick={()=>{Taro.navigateTo({url:'/pages/push/add'})}}>发布行程</AtButton>
+        <AtButton onClick={()=>{Taro.switchTab({url:'/pages/push/add'})}}>发布行程</AtButton>
       </View>
     );
   }

@@ -23,8 +23,8 @@
   margin-right: 12rpx;
 }
 .weui-btn {
-  background: #f4de3b !important;
-  color: #000 !important;
+  background: #cc1e12 !important;
+  color:white !important;
 }
 .weui-input {
   overflow: hidden;

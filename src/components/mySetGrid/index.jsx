@@ -25,8 +25,7 @@ const columns = [
     path: "myInfoSet"
   },
   {
-    image:
-      "/assets/我的钱包.png",
+    image: "/assets/我的钱包.png",
     value: "我的钱包",
     path: "wallet"
   },
@@ -39,7 +38,7 @@ const columns = [
     value: "一键报警"
   },
   {
-    image: "/assets/icon/帮助.png",
+    image: "/assets/帮助.png",
     value: "使用帮助"
   }
 ];
@@ -74,8 +73,8 @@ export default class MySetGrid extends Component {
     });
   };
 
-  onConfirm = (value) => {
-    this.props.urgentSubmit(value,'confirm');
+  onConfirm = value => {
+    this.props.urgentSubmit(value, "confirm");
     this.setState({
       isOpened: false
     });
@@ -85,13 +84,17 @@ export default class MySetGrid extends Component {
     const { isOpened, helpOpen } = this.state;
     return (
       <>
-        <AtFloatLayout
-          isOpened={helpOpen}
-          title='使用帮助'
-          onClose={this.closeHelp}
-        >
-          关于本软件的使用帮助、介绍啥的。。。。。。。
-        </AtFloatLayout>
+        <AtModal isOpened={helpOpen}>
+          <AtModalHeader>使用帮助</AtModalHeader>
+          <AtModalContent>
+          使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助
+          </AtModalContent>
+          <AtModalAction>
+            {" "}
+            <Button onClick={this.closeHelp}>取消</Button>{" "}
+            <Button onClick={this.closeHelp}>确定</Button>{" "}
+          </AtModalAction>
+        </AtModal>
         <AtModal isOpened={isOpened}>
           <AtModalHeader>设置紧急联系人</AtModalHeader>
           <AtModalContent className='modalContent'>
@@ -104,7 +107,7 @@ export default class MySetGrid extends Component {
               type='text'
               placeholder='紧急联系人姓名'
               value={this.props.urgentName}
-              onChange={this.props.fieldChange.bind(this,'urgentName')}
+              onChange={this.props.fieldChange.bind(this, "urgentName")}
             />
             <AtInput
               className='field'
@@ -115,7 +118,7 @@ export default class MySetGrid extends Component {
               type='number'
               placeholder='紧急联系人电话'
               value={this.props.urgentPhone}
-              onChange={this.props.fieldChange.bind(this,'urgentPhone')}
+              onChange={this.props.fieldChange.bind(this, "urgentPhone")}
             />
           </AtModalContent>
           <AtModalAction>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Taro from "@tarojs/taro";
-import { View, Text, Image } from "@tarojs/components";
-// import EcharsView from '../../components/echarsView/index'
+import { View, Text, Image,ScrollView } from "@tarojs/components";
+import RecordFilter from "../../components/recordFilter";
 import {
   AtButton,
   AtCard,
@@ -16,14 +16,23 @@ import moment from "moment";
 import utils from "../../utils/index";
 import "./index.scss";
 
-const tabList = [{ title: "账单" }, { title: "智能分析" }];
+const OrderStatusMap = {
+  0: "未出行",
+  1: "进行中",
+  2: "已完成",
+  3: '已关闭'
+};
+const scrollStyle = {
+  height: '450px'
+}
+const scrollTop = 0
+const Threshold = 20
 export default class Index extends Component {
   constructor(props) {
     super(props);
+    this.ref = React.createRef();
     this.typeSelectRef = React.createRef();
     this.state = {
-      payTotal: 0, // 总支出
-      incomeTotal: 0, // 总收入
       search: "", // 搜索
       current: 0,
       recordList: [],
@@ -35,78 +44,19 @@ export default class Index extends Component {
   }
 
   async componentDidMount() {
-    await this.getRecordList();
-    await this.getMonthMoney();
-    // this.message();
+    console.log('-------')
+    await this.getCusRecordList();
   }
 
   async componentDidShow() {
-    await this.getRecordList();
-    await this.getMonthMoney();
-    // this.message();
+    console.log('#$$$$$$',this.ref.current)
+    const filter = this.ref.current.getFilter()
+    delete filter.isOpened
+    delete filter.helpOpen
+    delete filter.status
+    await this.getCusRecordList(this.ref.current.getFilter());
   }
 
-  // 获取所有记录
-  getRecordList = async obj => {
-    const {
-      data: { data }
-    } = await utils.request("Record/getRecordList", { ...obj });
-    // 总收入、总支出
-    let payTotal = 0;
-    let incomeTotal = 0;
-    data.forEach(item => {
-      item.type === "pay"
-        ? (payTotal = payTotal + item.price)
-        : (incomeTotal = incomeTotal + item.price);
-    });
-    console.log(payTotal, incomeTotal);
-    await this.setState({
-      recordList: data,
-      payTotal,
-      incomeTotal
-    });
-  };
-
-  // 获取本月结余
-  getMonthMoney = async () => {
-    const {
-      data: { data }
-    } = await utils.request("Record/getRecordList", { isMonth: true });
-    const {
-      data: {
-        info: { monthMoney }
-      }
-    } = await utils.request("User/userInfo");
-    let payTotal = 0;
-    let incomeTotal = 0;
-    data.forEach(item => {
-      item.type === "pay"
-        ? (payTotal = payTotal + item.price)
-        : (incomeTotal = incomeTotal + item.price);
-    });
-    // 剩余的钱
-    const money = incomeTotal + monthMoney - payTotal;
-    console.log("money", money, "monthMoney", monthMoney);
-    // 过度消费  如果本月预算>100 && 结余<预算的10%
-    if (money < monthMoney * 0.1 && monthMoney > 100) {
-      this.setState({
-        message: "您已过度消费！请节制！"
-      });
-    }
-    if (money < monthMoney * 0.5 && monthMoney > 100) {
-      this.setState({
-        message: "请根据实际需要消费~"
-      });
-    }
-    if (money > monthMoney * 0.8 && monthMoney > 100) {
-      this.setState({
-        message: "请在未来适度消费~不要难为自己喔~😯"
-      });
-    }
-    this.setState({
-      monthMoney: money
-    });
-  };
 
   // 处理时间选择
   bindDateChange = async (field, { detail: { value } = {} }) => {
@@ -133,12 +83,6 @@ export default class Index extends Component {
     });
   };
 
-  changeTab = current => {
-    this.setState({
-      current
-    });
-  };
-
   onSearchChange = value => {
     this.setState({
       search: value
@@ -149,17 +93,21 @@ export default class Index extends Component {
   onSearch = async () => {
     const { search } = this.state;
     console.log("search", search);
-    await this.getRecordList({
+    await this.getCusRecordList({
       search
     });
   };
 
-  // message = (type, message) => {
-  //   Taro.atMessage({
-  //     message,
-  //     type
-  //   });
-  // };
+    // 获取乘客订单记录
+    getCusRecordList = async (filter) => {
+      const res = await utils.request("CusRecord/getRecordList",filter);
+      console.log("res...", res);
+      if (res.data.success) {
+        await this.setState({
+          recordList: res.data.data
+        });
+      }
+    };
 
   render() {
     const {
@@ -167,9 +115,6 @@ export default class Index extends Component {
       startDate,
       endDate,
       current,
-      payTotal,
-      incomeTotal,
-      monthMoney,
       message = ""
     } = this.state;
     console.log("message", message);
@@ -181,80 +126,52 @@ export default class Index extends Component {
             {`${message}`}
           </AtNoticebar>
         )}
-        {/* <AtMessage /> */}
-        {/* 头部 */}
-        <View className='head'>
-          <View className='at-row'>
-            <View className='at-col payText'>共支出(元)</View>
-            <View className='at-col'></View>
-            {/* 时间范围选择 */}
-            <View className='at-col datePicker'>
-              {" "}
-              <picker
-                onChange={this.bindDateChange.bind(this, "startDate")}
-                mode='date'
-                value={startDate}
-              >
-                <AtButton className='picker' size='small'>
-                  {moment(startDate).format("YYYY-MM-DD")}
-                </AtButton>
-              </picker>{" "}
-              &nbsp;~&nbsp;{" "}
-              <picker
-                onChange={this.bindDateChange.bind(this, "endDate")}
-                mode='date'
-                value={endDate}
-              >
-                <AtButton className='picker' size='small'>
-                  {moment(endDate).format("YYYY-MM-DD")}
-                </AtButton>
-              </picker>
-            </View>
-          </View>
-          <View className='payNum'>￥{payTotal}</View>
-          <View className='at-row'>
-            <View className='at-col'>
-              共收入 <Text className='incomeNum'>￥{incomeTotal}</Text>{" "}
-            </View>
-            <View className='at-col'></View>
-            <View className='at-col'>
-              本月结余： <Text className='jieyuNum'>{`￥ ${monthMoney}`}</Text>
-            </View>
-          </View>
-        </View>
+        {/* 头部筛选区域 */}
+        <RecordFilter ref={this.ref} getCusRecordList={this.getCusRecordList} />
         {/* 搜索 */}
         <AtSearchBar
           value={this.state.search}
           onChange={this.onSearchChange}
           onActionClick={this.onSearch}
-          placeholder='根据备注搜索'
+          placeholder='模糊搜索'
         />
-        <View className='recordList'>
+        {/* 订单区域 */}
+        <ScrollView
+          className='scrollview'
+          scrollY
+          scrollWithAnimation
+          scrollTop={scrollTop}
+          style={scrollStyle}
+          lowerThreshold={Threshold}
+          upperThreshold={Threshold}
+        >
+        <View className='pushRecord'>
           {recordList.map((item, index) => {
-            const type = JSON.parse(item.selectedType);
             return (
               <AtCard
                 key={item.id}
                 note={`备注：${item.remark}`}
-                extra={`${item.price > 99 ? "大额" : ""}`}
-                title={moment(item.date).format("YYYY-MM-DD")}
-                thumb='/assets/icon/日历.png'
+                extra={`￥${item.price||'-'}`}
+                title={moment(item.date).format('YYYY-MM-DD HH:MM')}
+                thumb='/assets/time_4px.png'
               >
                 <View className='item'>
-                  <Image className='img' src={type.icon} />
-                  <Text className='title'>{type.title}</Text>
-                  <Text
-                    className={`price ${
-                      item.type === "pay" ? "payColor" : "incomeColor"
-                    }`}
-                  >
-                    {item.price}
-                  </Text>
+                  <View className='local'>
+                    <Text className='startLocal'>{item.startLocal}</Text>
+                  </View>
+                  <View className='local'>
+                    <Text className='endLocal'>{item.endLocal}</Text>
+                  </View>
+                  <View className='local'>
+                    <Text className='createdAt'>发布时间：{moment(+item.createdAt).format('YYYY-MM-DD HH:MM:ss')}</Text>
+                  </View>
+                  <View className='status'>{OrderStatusMap[item.status]}</View>
                 </View>
               </AtCard>
             );
           })}
         </View>
+        </ScrollView>
       </View>
     );
   }

@@ -56,7 +56,7 @@ export default class Index extends Component {
   };
 
   addTrip = () => {
-    Taro.navigateTo({
+    Taro.switchTab({
       url: "/pages/push/add"
     });
   };

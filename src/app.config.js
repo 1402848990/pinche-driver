@@ -2,10 +2,7 @@ export default {
   pages: [
     "pages/index/index", // 首页
     "pages/mine/index", // 我的
-    "pages/addAccount/index", // 记一笔
     "pages/myInfoSet/index", // 用户信息设置
-    "pages/payTypeList/index", // 添加支出类型
-    "pages/incomeTypeList/index", // 添加收入类型
     "pages/pushRecord/index", // 发布记录
     "pages/wallet/index", // 钱包
     "pages/push/add", // 发布行程
